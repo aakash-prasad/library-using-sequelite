@@ -2,11 +2,7 @@ const Sequelize = require('sequelize');
 const {conn} = require('../connection')
 
 const Customers = conn.define('Customers', {
-  firstName: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  lastName: {
+  userName: {
     type: Sequelize.STRING,
     allowNull: false
   },
