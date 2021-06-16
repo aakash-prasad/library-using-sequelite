@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {conn} = require('../connection')
 const Customer = require('../Models/Customer')
+const Issue = require('../Models/Issue');
 
 //ROUTE TO INSERT A NEW CUSTOMER
 router.post('/', async(req, res)=>{
@@ -50,6 +51,32 @@ router.get('/:id', async(req, res)=>{
   })
   console.log(customer[0].dataValues)
   return res.status(200).json({data: customer})
+})
+
+// POST REQUEST WHERE THE USER DETAILS CAN BE UPDATED
+router.post('/:id', async(req,res)=>{
+  const {userName, phoneNo}= req.body;
+  //CHECK A VALID PHONE NUMBER
+    if(phoneNo.length != 10){
+      return res.status(400).json({data: "Enter a valid number"})
+    }
+  //GRAB THE ID FROM THE REQUEST PARAMS
+  const customerId = req.params.id
+  // UPDATE CUSTOMER TABLE WHERE ID = ID
+  try{
+    await Customer.update({userName: userName, phoneNo:phoneNo},{
+    where: {id : customerId}
+    })
+  }catch(err){return res.status(500).json({err})}
+  return res.status(200).json({data: [userName, phoneNo]})
+})
+
+
+//POST REQUEST TO ISSUE A BOOK USING CUSTOMERID AND BOOKID
+router.post('/:id1/book/:id2', (req, res)=>{
+  const customerId = req.params.id1
+  const bookId = req.params.id2
+  
 })
 
 module.exports =router
